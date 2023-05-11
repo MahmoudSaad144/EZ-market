@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Models\Role;
+
+use Spatie\Permission\Traits\HasRoles;
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable,HasRoles;
+
+
+
+//     public function isAdmin()
+//     {
+//         $role = Role::where('name', 'Admin')->first();
+// // dd($role);
+//         return $this; // assuming that 'admin' is the role name for admin users
+  
+// //   dd($role);
+
+//     }
+
+
+
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $table = 'users';
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+//        'role'
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+//    protected $appends = [
+//        'profile_photo_url',
+//    ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+//        'roles' => 'array',
+    ];
+    public function order()
+    {
+        return $this->hasMany(Order::class);
+    }
+    public function run()
+    {
+        User::factory()
+            ->count(5)
+            ->create();
+    }
+}
